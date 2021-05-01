@@ -1,7 +1,7 @@
 #ifndef __kcalc_hpp__
 #define __kcalc_hpp__
 
-#include <istream>
+#include <iostream>
 #include <sstream>
 
 namespace kcalc
@@ -9,6 +9,15 @@ namespace kcalc
 
 /// Main entry point to the `kcalc` application.
 int run(int argc, char* argv[]);
+
+
+/// REPL (read-eval-print loop) for expression evaluation.
+/// @param prompt Prompt symbol, if any.
+/// @param inputStream the stream with the incoming text
+/// @param outputStream the stream to print the output to
+void repl(const std::string& prompt = "",
+          std::istream& inputStream = std::cin,
+          std::ostream& outputStream = std::cout);
 
 
 /// Evaluates an expression given in prefix format.

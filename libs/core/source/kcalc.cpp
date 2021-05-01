@@ -20,7 +20,23 @@ int run(int argc, char* /*argv*/[])
      return EXIT_FAILURE;
   }
 
+  repl();
+
   return EXIT_SUCCESS;
+}
+
+
+void repl(const std::string& prompt,
+          std::istream& inputStream,
+          std::ostream& outputStream)
+{
+    std::string line;
+    outputStream << prompt;
+    while (std::getline(inputStream, line).good())
+    {
+        auto value = evalPrefixExpr(line);
+        outputStream << value << std::endl << prompt;
+    }
 }
 
 }
