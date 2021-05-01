@@ -62,49 +62,91 @@ TEST_CASE("test kcalc::evalInfixExpr(const std::string&)")
 
 TEST_CASE("test kcalc::repl()")
 {
-    auto inputStream = std::stringstream{
-        "3\n"
-        "+ 1 2\n"
-        "+ 1 * 2 3\n"
-        "+ * 1 2 3\n"
-        "- / 10 + 1 1 * 1 2\n"
-        "- 0 3\n"
-        "/ 3 2\n"
-    };
-
-    auto outputStream = std::stringstream{};
-
-    SUBCASE("repl without prompt")
+    SUBCASE("prefix")
     {
-        auto expectedOutput =
+        auto inputStream = std::stringstream{
             "3\n"
-            "3\n"
-            "7\n"
-            "5\n"
-            "3\n"
-            "-3\n"
-            "1.5\n"s;
+            "+ 1 2\n"
+            "+ 1 * 2 3\n"
+            "+ * 1 2 3\n"
+            "- / 10 + 1 1 * 1 2\n"
+            "- 0 3\n"
+            "/ 3 2\n"
+        };
 
-        repl(""s, inputStream, outputStream);
+        auto outputStream = std::stringstream{};
 
-        REQUIRE_EQ(outputStream.str(), expectedOutput);
+        SUBCASE("without prompt")
+        {
+            auto expectedOutput =
+                "3\n"
+                "3\n"
+                "7\n"
+                "5\n"
+                "3\n"
+                "-3\n"
+                "1.5\n"s;
+
+            repl(ExpressionFormat::PREFIX, ""s, inputStream, outputStream);
+
+            REQUIRE_EQ(outputStream.str(), expectedOutput);
+        }
+
+        SUBCASE("with caret prompt")
+        {
+            auto expectedOutput =
+                "> 3\n"
+                "> 3\n"
+                "> 7\n"
+                "> 5\n"
+                "> 3\n"
+                "> -3\n"
+                "> 1.5\n"
+                "> "s;
+
+            repl(ExpressionFormat::PREFIX, "> "s, inputStream, outputStream);
+
+            REQUIRE_EQ(outputStream.str(), expectedOutput);
+        }
     }
 
-    SUBCASE("repl with caret prompt")
+    SUBCASE("infix")
     {
-        auto expectedOutput =
-            "> 3\n"
-            "> 3\n"
-            "> 7\n"
-            "> 5\n"
-            "> 3\n"
-            "> -3\n"
-            "> 1.5\n"
-            "> "s;
+        auto inputStream = std::stringstream{
+            "( 1 + 2 )\n"
+            "( 1 + ( 2 * 3 ) )\n"
+            "( ( 1 * 2 ) + 3 )\n"
+            "( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )\n"
+        };
 
-        repl("> "s, inputStream, outputStream);
+        auto outputStream = std::stringstream{};
 
-        REQUIRE_EQ(outputStream.str(), expectedOutput);
+        SUBCASE("without prompt")
+        {
+            auto expectedOutput =
+                "3\n"
+                "7\n"
+                "5\n"
+                "-1.8\n"s;
+
+            repl(ExpressionFormat::INFIX, ""s, inputStream, outputStream);
+
+            REQUIRE_EQ(outputStream.str(), expectedOutput);
+        }
+
+        SUBCASE("with caret prompt")
+        {
+            auto expectedOutput =
+                "> 3\n"
+                "> 7\n"
+                "> 5\n"
+                "> -1.8\n"
+                "> "s;
+
+            repl(ExpressionFormat::INFIX, "> "s, inputStream, outputStream);
+
+            REQUIRE_EQ(outputStream.str(), expectedOutput);
+        }
     }
 }
 

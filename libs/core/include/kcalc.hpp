@@ -11,13 +11,35 @@ namespace kcalc
 int run(int argc, char* argv[]);
 
 
-/// REPL (read-eval-print loop) for prefix expression evaluation.
+/// Denotes the syntax format of an expression. Either prefix or infix.
+enum class ExpressionFormat : uint8_t
+{
+    PREFIX,
+    INFIX,
+};
+
+
+/// REPL (read-eval-print loop) for prefix/infix expression evaluation.
+/// Results are calculated as real numbers (float).
+/// @param expressionFormat the syntax format of the expressions
 /// @param prompt Prompt symbol, if any.
 /// @param inputStream the stream with the incoming text
 /// @param outputStream the stream to print the output to
-void repl(const std::string& prompt = "",
+void repl(ExpressionFormat expressionFormat = ExpressionFormat::INFIX,
+          const std::string& prompt = "",
           std::istream& inputStream = std::cin,
           std::ostream& outputStream = std::cout);
+
+
+/// Evaluates an expression in a given syntax format to a real number.
+/// The expression is assumed to be valid. Operands are assumed to be positive
+/// integer numbers. Result is returned as a float number. (Any sub-expressions
+/// are float.) The reading stops after the first complete expression has been
+/// read in. Any superfluous content is ignored.
+/// @param expression the expression in prefix format
+/// @return the value of the expression
+float evalExpr(ExpressionFormat expressionFormat,
+               const std::string& expression);
 
 
 /// Evaluates an expression given in prefix format.

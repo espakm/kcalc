@@ -6,27 +6,53 @@
 namespace kcalc
 {
 
-int run(int argc, char* /*argv*/[])
+void printUsage()
 {
-  if (argc != 1)
-  {
     std::cout <<
         "\n"
-        "Invalid command line arguments.\n"
+        "./kcalc [--infix|--prefix]\n"
         "\n"
-        "This program reads from the standard input and prints its results "
-        "to the standard output. No arguments required.\n"
+        "This program reads arithmetic expressions from the standard input and "
+        "prints their result to the standard output. The expressions can be "
+        "either in prefix or fully parenthesised infix format.\n"
+        "\n"
+        "The default syntax format is infix.\n"
         "\n";
-     return EXIT_FAILURE;
-  }
+}
 
-  repl();
+int run(int argc, char* argv[])
+{
+    auto expressionFormat = ExpressionFormat::INFIX;
 
-  return EXIT_SUCCESS;
+    if (argc == 2)
+    {
+        auto arg2 = std::string{argv[1]};
+        if (arg2 == "--prefix")
+        {
+            expressionFormat = ExpressionFormat::PREFIX;
+        }
+        else if (arg2 != "--infix")
+        {
+            std::cout << "Invalid command line argument." << std::endl;
+            printUsage();
+            return EXIT_FAILURE;
+        }
+    }
+    else if (argc != 1)
+    {
+        std::cout << "Invalid command line arguments." << std::endl;
+        printUsage();
+        return EXIT_FAILURE;
+    }
+
+    repl(expressionFormat);
+
+    return EXIT_SUCCESS;
 }
 
 
-void repl(const std::string& prompt,
+void repl(ExpressionFormat expressionFormat,
+          const std::string& prompt,
           std::istream& inputStream,
           std::ostream& outputStream)
 {
@@ -34,9 +60,18 @@ void repl(const std::string& prompt,
     outputStream << prompt;
     while (std::getline(inputStream, line).good())
     {
-        auto value = evalPrefixExpr(line);
+        auto value = evalExpr(expressionFormat, line);
         outputStream << value << std::endl << prompt;
     }
+}
+
+
+float evalExpr(ExpressionFormat expressionFormat,
+               const std::string& expression)
+{
+    return expressionFormat == ExpressionFormat::PREFIX
+               ? evalPrefixExpr(expression)
+               : evalInfixExpr(expression);
 }
 
 }
