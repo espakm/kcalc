@@ -26,7 +26,7 @@ TEST_CASE("test kcalc::run() invalid args")
 }
 
 
-TEST_CASE("test kcalc::evalPrefixExpr()")
+TEST_CASE("test kcalc::evalPrefixExpr(const std::string&)")
 {
     REQUIRE_EQ(evalPrefixExpr("3"s), 3.0f);
     REQUIRE_EQ(evalPrefixExpr("+ 1 2"s), 3.0f);
@@ -43,6 +43,20 @@ TEST_CASE("test kcalc::evalPrefixExpr()")
     REQUIRE_EQ(evalPrefixExpr<int>("- / 10 + 1 1 * 1 2"s), 3);
     REQUIRE_EQ(evalPrefixExpr<int>("- 0 3"s), -3);
     REQUIRE_EQ(evalPrefixExpr<int>("/ 3 2"s), 1);
+}
+
+
+TEST_CASE("test kcalc::evalInfixExpr(const std::string&)")
+{
+    REQUIRE_EQ(evalInfixExpr("( 1 + 2 )"s), 3.0f);
+    REQUIRE_EQ(evalInfixExpr("( 1 + ( 2 * 3 ) )"s), 7.0f);
+    REQUIRE_EQ(evalInfixExpr("( ( 1 * 2 ) + 3 )"s), 5.0f);
+    REQUIRE_EQ(evalInfixExpr("( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )"s), -1.8f);
+
+    REQUIRE_EQ(evalInfixExpr<int>("( 1 + 2 )"s), 3);
+    REQUIRE_EQ(evalInfixExpr<int>("( 1 + ( 2 * 3 ) )"s), 7);
+    REQUIRE_EQ(evalInfixExpr<int>("( ( 1 * 2 ) + 3 )"s), 5);
+    REQUIRE_EQ(evalInfixExpr<int>("( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )"s), -2);
 }
 
 
