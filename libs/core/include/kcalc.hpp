@@ -2,6 +2,8 @@
 #define __kcalc_hpp__
 
 #include <iostream>
+#include <iterator>
+#include <regex>
 #include <sstream>
 
 namespace kcalc
@@ -54,19 +56,6 @@ template<class T = float>
 T evalPrefixExpr(const std::string& expression);
 
 
-/// Evaluates an expression coming on a stream in prefix format.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned in the desired type, by default as
-/// float. The reading stops after the first complete expression has been read
-/// in. Any following input is not processed, the "cursor" stays at the end of
-/// the expression in the stream.
-/// @param T the type of the result of the expression
-/// @param inputStream the input stream from where the expression is read in
-/// @return the value of the expression
-template<class T = float>
-T evalPrefixExpr(std::istream& inputStream);
-
-
 /// Evaluates an expression given in infix format.
 /// The expression is assumed to be valid. Operands are assumed to be positive
 /// integer numbers. Result is returned in the desired type, by default as
@@ -79,41 +68,73 @@ template<class T = float>
 T evalInfixExpr(const std::string& expression);
 
 
-/// Evaluates an expression coming on a stream in infix format.
+/// Evaluates an expression in prefix format.
+/// The tokens of the expression are provided by the iterator argument.
 /// The expression is assumed to be valid. Operands are assumed to be positive
 /// integer numbers. Result is returned in the desired type, by default as
 /// float. The reading stops after the first complete expression has been read
-/// in. Any following input is not processed, the "cursor" stays at the end of
-/// the expression in the stream.
+/// in. Further tokens are not processed, even if the iterator is not at the
+/// end.
 /// @param T the type of the result of the expression
-/// @param inputStream the input stream from where the expression is read in
+/// @param tokenIt the iterator that delivers the tokens of the expression
 /// @return the value of the expression
 template<class T = float>
-T evalInfixExpr(std::istream& inputStream);
+T evalPrefixExpr(std::sregex_iterator& tokenIt);
+
+
+/// Evaluates an expression in infix format.
+/// The tokens of the expression are provided by the iterator argument.
+/// The expression is assumed to be valid. Operands are assumed to be positive
+/// integer numbers. Result is returned in the desired type, by default as
+/// float. The reading stops after the first complete expression has been read
+/// in. Further tokens are not processed, even if the iterator is not at the
+/// end.
+/// @param T the type of the result of the expression
+/// @param tokenIt the iterator that delivers the tokens of the expression
+/// @return the value of the expression
+template <class T>
+T evalInfixExpr(std::sregex_iterator& tokenIt);
 
 
 template<class T>
 T evalPrefixExpr(const std::string& expression)
 {
-    std::stringstream strStream(expression);
-    return evalPrefixExpr<T>(strStream);
+    auto tokenRegex = std::regex{"\\d+|[\\+\\-\\*\\/]"};
+    auto tokenIt = std::sregex_iterator{
+        expression.begin(),
+        expression.end(),
+        tokenRegex};
+    return evalPrefixExpr<T>(tokenIt);
+}
+
+
+template<class T>
+T evalInfixExpr(const std::string& expression)
+{
+    auto tokenRegex = std::regex{"\\d+|[\\+\\-\\*\\/\\(\\)]"};
+    auto tokenIt = std::sregex_iterator{
+        expression.begin(),
+        expression.end(),
+        tokenRegex};
+    return evalInfixExpr<T>(tokenIt);
 }
 
 
 template <class T>
-T evalPrefixExpr(std::istream& inputStream)
+T evalPrefixExpr(std::sregex_iterator& tokenIt)
 {
-    std::string nextToken;
-    inputStream >> nextToken;
+    auto nextToken = tokenIt++->str();
 
     if (nextToken == "+"
         || nextToken == "-"
         || nextToken == "*"
         || nextToken == "/")
     {
-        auto leftOpValue = evalPrefixExpr<T>(inputStream);
-        auto rightOpValue = evalPrefixExpr<T>(inputStream);
-        switch (nextToken[0])
+        auto operator_ = nextToken;
+
+        auto leftOpValue = evalPrefixExpr<T>(tokenIt);
+        auto rightOpValue = evalPrefixExpr<T>(tokenIt);
+        switch (operator_[0])
         {
         case '+':
             return leftOpValue + rightOpValue;
@@ -135,31 +156,21 @@ T evalPrefixExpr(std::istream& inputStream)
 }
 
 
-template<class T>
-T evalInfixExpr(const std::string& expression)
-{
-    std::stringstream strStream(expression);
-    return evalInfixExpr<T>(strStream);
-}
-
-
 template <class T>
-T evalInfixExpr(std::istream& inputStream)
+T evalInfixExpr(std::sregex_iterator& tokenIt)
 {
-    std::string nextToken;
-    inputStream >> nextToken;
+    auto nextToken = tokenIt++->str();
 
     if (nextToken == "(")
     {
-        auto leftOpValue = evalInfixExpr<T>(inputStream);
+        auto leftOpValue = evalInfixExpr<T>(tokenIt);
 
-        inputStream >> nextToken;
-        auto operator_ = nextToken;
+        auto operator_ = tokenIt++->str();
 
-        auto rightOpValue = evalInfixExpr<T>(inputStream);
+        auto rightOpValue = evalInfixExpr<T>(tokenIt);
 
         /// Consume and discard the closing parenthesis.
-        inputStream >> nextToken;
+        ++tokenIt;
 
         switch (operator_[0])
         {

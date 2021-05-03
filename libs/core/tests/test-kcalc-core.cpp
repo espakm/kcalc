@@ -43,20 +43,50 @@ TEST_CASE("test kcalc::evalPrefixExpr(const std::string&)")
     REQUIRE_EQ(evalPrefixExpr<int>("- / 10 + 1 1 * 1 2"s), 3);
     REQUIRE_EQ(evalPrefixExpr<int>("- 0 3"s), -3);
     REQUIRE_EQ(evalPrefixExpr<int>("/ 3 2"s), 1);
+
+    REQUIRE_EQ(evalPrefixExpr("+1 2"s), 3.0f);
+    REQUIRE_EQ(evalPrefixExpr("+1*2 3"s), 7.0f);
+    REQUIRE_EQ(evalPrefixExpr("+*1 2 3"s), 5.0f);
+    REQUIRE_EQ(evalPrefixExpr("-/10+1 1*1 2"s), 3.0f);
+    REQUIRE_EQ(evalPrefixExpr("-0 3"s), -3.0f);
+    REQUIRE_EQ(evalPrefixExpr("/3 2"s), 1.5f);
+
+    REQUIRE_EQ(evalPrefixExpr<int>("+1 2"s), 3);
+    REQUIRE_EQ(evalPrefixExpr<int>("+1*2 3"s), 7);
+    REQUIRE_EQ(evalPrefixExpr<int>("+*1 2 3"s), 5);
+    REQUIRE_EQ(evalPrefixExpr<int>("-/10+1 1*1 2"s), 3);
+    REQUIRE_EQ(evalPrefixExpr<int>("-0 3"s), -3);
+    REQUIRE_EQ(evalPrefixExpr<int>("/3 2"s), 1);
 }
 
 
 TEST_CASE("test kcalc::evalInfixExpr(const std::string&)")
 {
+    REQUIRE_EQ(evalInfixExpr("3"s), 3.0f);
     REQUIRE_EQ(evalInfixExpr("( 1 + 2 )"s), 3.0f);
     REQUIRE_EQ(evalInfixExpr("( 1 + ( 2 * 3 ) )"s), 7.0f);
     REQUIRE_EQ(evalInfixExpr("( ( 1 * 2 ) + 3 )"s), 5.0f);
     REQUIRE_EQ(evalInfixExpr("( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )"s), -1.8f);
+    REQUIRE_EQ(evalInfixExpr("(0 - 3)"s), -3.0f);
 
+    REQUIRE_EQ(evalInfixExpr<int>("3"s), 3);
     REQUIRE_EQ(evalInfixExpr<int>("( 1 + 2 )"s), 3);
     REQUIRE_EQ(evalInfixExpr<int>("( 1 + ( 2 * 3 ) )"s), 7);
     REQUIRE_EQ(evalInfixExpr<int>("( ( 1 * 2 ) + 3 )"s), 5);
     REQUIRE_EQ(evalInfixExpr<int>("( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )"s), -2);
+    REQUIRE_EQ(evalInfixExpr<int>("(0 - 3)"s), -3);
+
+    REQUIRE_EQ(evalInfixExpr("(1+2)"s), 3.0f);
+    REQUIRE_EQ(evalInfixExpr("(1+(2*3))"s), 7.0f);
+    REQUIRE_EQ(evalInfixExpr("((1*2)+3)"s), 5.0f);
+    REQUIRE_EQ(evalInfixExpr("(((1+1)/10)-(1*2))"s), -1.8f);
+    REQUIRE_EQ(evalInfixExpr("(0-3)"s), -3.0f);
+
+    REQUIRE_EQ(evalInfixExpr<int>("(1+2)"s), 3);
+    REQUIRE_EQ(evalInfixExpr<int>("(1+(2*3))"s), 7);
+    REQUIRE_EQ(evalInfixExpr<int>("((1*2)+3)"s), 5);
+    REQUIRE_EQ(evalInfixExpr<int>("(((1+1)/10)-(1*2))"s), -2);
+    REQUIRE_EQ(evalInfixExpr<int>("(0-3)"s), -3);
 }
 
 
@@ -72,6 +102,7 @@ TEST_CASE("test kcalc::repl()")
             "- / 10 + 1 1 * 1 2\n"
             "- 0 3\n"
             "/ 3 2\n"
+            "-/10+1 1*1 2\n"
         };
 
         auto outputStream = std::stringstream{};
@@ -85,7 +116,8 @@ TEST_CASE("test kcalc::repl()")
                 "5\n"
                 "3\n"
                 "-3\n"
-                "1.5\n"s;
+                "1.5\n"
+                "3\n"s;
 
             repl(ExpressionFormat::PREFIX, ""s, inputStream, outputStream);
 
@@ -102,6 +134,7 @@ TEST_CASE("test kcalc::repl()")
                 "> 3\n"
                 "> -3\n"
                 "> 1.5\n"
+                "> 3\n"
                 "> "s;
 
             repl(ExpressionFormat::PREFIX, "> "s, inputStream, outputStream);
@@ -117,6 +150,7 @@ TEST_CASE("test kcalc::repl()")
             "( 1 + ( 2 * 3 ) )\n"
             "( ( 1 * 2 ) + 3 )\n"
             "( ( ( 1 + 1 ) / 10 ) - ( 1 * 2 ) )\n"
+            "(((1+1)/10)-(1*2))\n"
         };
 
         auto outputStream = std::stringstream{};
@@ -127,6 +161,7 @@ TEST_CASE("test kcalc::repl()")
                 "3\n"
                 "7\n"
                 "5\n"
+                "-1.8\n"
                 "-1.8\n"s;
 
             repl(ExpressionFormat::INFIX, ""s, inputStream, outputStream);
@@ -140,6 +175,7 @@ TEST_CASE("test kcalc::repl()")
                 "> 3\n"
                 "> 7\n"
                 "> 5\n"
+                "> -1.8\n"
                 "> -1.8\n"
                 "> "s;
 

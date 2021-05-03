@@ -58,7 +58,7 @@ void repl(ExpressionFormat expressionFormat,
 {
     std::string line;
     outputStream << prompt;
-    while (std::getline(inputStream, line).good())
+    while (std::getline(inputStream, line))
     {
         auto value = evalExpr(expressionFormat, line);
         outputStream << value << std::endl << prompt;
