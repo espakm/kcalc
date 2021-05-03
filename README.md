@@ -47,11 +47,11 @@ The application takes its input from stdin and writes the result to stdout.
 the following command can be used on either Linux, Mac or Windows:
 
 ```
-./build/apps/kcalc < resources/input-example-1.txt
+./build/apps/kcalc [--prefix|--infix]
 ```
 
 On Linux or Mac, the following script can also be used, for convenience:
 
 ```
-./run.sh
+./run.sh [--prefix|--infix]
 ```
