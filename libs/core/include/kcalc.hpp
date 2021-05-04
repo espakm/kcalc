@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iterator>
 #include <regex>
-#include <sstream>
 
 namespace kcalc
 {
@@ -115,7 +114,7 @@ T evalPrefixExpr(const std::string& expression)
         expression.end(),
         tokenRegex};
 
-    T value = evalPrefixExpr<T>(tokenIt);
+    auto value = evalPrefixExpr<T>(tokenIt);
 
     if (tokenIt != std::sregex_iterator())
         throw MalformedExpression("Unexpected token after expression.");
@@ -133,7 +132,7 @@ T evalInfixExpr(const std::string& expression)
         expression.end(),
         tokenRegex};
 
-    T value = evalInfixExpr<T>(tokenIt);
+    auto value = evalInfixExpr<T>(tokenIt);
 
     if (tokenIt != std::sregex_iterator())
         throw MalformedExpression("Unexpected token after expression.");
