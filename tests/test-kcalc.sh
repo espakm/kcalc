@@ -9,7 +9,7 @@ fail() {
 
 trap fail ERR
 
-source_dir=$(git rev-parse --show-toplevel)
+source_dir="$(dirname ${BASH_SOURCE[0]})/.."
 build_dir="${source_dir}/build"
 kcalc_binary="${build_dir}/apps/kcalc"
 

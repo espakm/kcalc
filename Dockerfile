@@ -3,21 +3,22 @@ FROM alpine:3.13 AS build
 RUN apk --no-cache add \
         cmake \
         make \
-        g++
+        g++ \
+        bash
 
 COPY . /src
-WORKDIR /build
+WORKDIR /src/build
 
-RUN cmake /src \
+RUN cmake .. \
  && make \
- && cp apps/kcalc /usr/bin/kcalc \
- && strip /usr/bin/kcalc
+ && ctest \
+ && strip apps/kcalc
 
 
 FROM alpine:3.13
 
 RUN apk --no-cache add libstdc++
 
-COPY --from=build /usr/bin/kcalc /usr/bin/
+COPY --from=build /src/build/apps/kcalc /usr/bin/
 
 ENTRYPOINT ["/usr/bin/kcalc"]
