@@ -12,6 +12,7 @@ namespace kcalc
 int run(int argc, char* argv[]);
 
 
+/// Exception type for expression syntax errors.
 class MalformedExpression : public std::runtime_error
 {
 public:
