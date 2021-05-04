@@ -60,8 +60,15 @@ void repl(ExpressionFormat expressionFormat,
     outputStream << prompt;
     while (std::getline(inputStream, line))
     {
-        auto value = evalExpr(expressionFormat, line);
-        outputStream << value << std::endl << prompt;
+        try
+        {
+            auto value = evalExpr(expressionFormat, line);
+            outputStream << value << std::endl << prompt;
+        }
+        catch (const MalformedExpression& exc)
+        {
+            outputStream << exc.what() << std::endl;
+        }
     }
 }
 

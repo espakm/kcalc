@@ -57,6 +57,12 @@ TEST_CASE("test kcalc::evalPrefixExpr(const std::string&)")
     REQUIRE_EQ(evalPrefixExpr<int>("-/10+1 1*1 2"s), 3);
     REQUIRE_EQ(evalPrefixExpr<int>("-0 3"s), -3);
     REQUIRE_EQ(evalPrefixExpr<int>("/3 2"s), 1);
+
+    REQUIRE_THROWS_AS(evalPrefixExpr("wrong"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalPrefixExpr("+"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalPrefixExpr("+ 1"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalPrefixExpr("1 2"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalPrefixExpr("+ 1 2 3"), MalformedExpression);
 }
 
 
@@ -87,6 +93,13 @@ TEST_CASE("test kcalc::evalInfixExpr(const std::string&)")
     REQUIRE_EQ(evalInfixExpr<int>("((1*2)+3)"s), 5);
     REQUIRE_EQ(evalInfixExpr<int>("(((1+1)/10)-(1*2))"s), -2);
     REQUIRE_EQ(evalInfixExpr<int>("(0-3)"s), -3);
+
+    REQUIRE_THROWS_AS(evalInfixExpr("wrong"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalInfixExpr("+ 1 2"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalInfixExpr("1 +"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalInfixExpr("1 + 2"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalInfixExpr("( 1 + 2"), MalformedExpression);
+    REQUIRE_THROWS_AS(evalInfixExpr("(1+2"), MalformedExpression);
 }
 
 

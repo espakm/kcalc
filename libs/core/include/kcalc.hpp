@@ -13,6 +13,16 @@ namespace kcalc
 int run(int argc, char* argv[]);
 
 
+class MalformedExpression : public std::runtime_error
+{
+public:
+    MalformedExpression(const std::string& message = std::string())
+        : std::runtime_error(message)
+    {
+    }
+};
+
+
 /// Denotes the syntax format of an expression. Either prefix or infix.
 enum class ExpressionFormat : uint8_t
 {
@@ -104,7 +114,13 @@ T evalPrefixExpr(const std::string& expression)
         expression.begin(),
         expression.end(),
         tokenRegex};
-    return evalPrefixExpr<T>(tokenIt);
+
+    T value = evalPrefixExpr<T>(tokenIt);
+
+    if (tokenIt != std::sregex_iterator())
+        throw MalformedExpression("Unexpected token after expression.");
+
+    return value;
 }
 
 
@@ -116,13 +132,22 @@ T evalInfixExpr(const std::string& expression)
         expression.begin(),
         expression.end(),
         tokenRegex};
-    return evalInfixExpr<T>(tokenIt);
+
+    T value = evalInfixExpr<T>(tokenIt);
+
+    if (tokenIt != std::sregex_iterator())
+        throw MalformedExpression("Unexpected token after expression.");
+
+    return value;
 }
 
 
 template <class T>
 T evalPrefixExpr(std::sregex_iterator& tokenIt)
 {
+    if (tokenIt == std::sregex_iterator())
+        throw MalformedExpression("Unexpected end of expression.");
+
     auto nextToken = tokenIt++->str();
 
     if (nextToken == "+"
@@ -148,29 +173,45 @@ T evalPrefixExpr(std::sregex_iterator& tokenIt)
         }
     }
 
-    /// According to the specification of the exercise, numbers in input
-    /// can be assumed to be positive integers. Hence, no exception handling.
-    T value = std::stoi(nextToken);
-
-    return value;
+    try
+    {
+        return std::stoi(nextToken);
+    }
+    catch (const std::invalid_argument&)
+    {
+        throw MalformedExpression("Number expected.");
+    }
 }
 
 
 template <class T>
 T evalInfixExpr(std::sregex_iterator& tokenIt)
 {
+    if (tokenIt == std::sregex_iterator())
+        throw MalformedExpression("Unexpected end of expression.");
+
     auto nextToken = tokenIt++->str();
 
     if (nextToken == "(")
     {
         auto leftOpValue = evalInfixExpr<T>(tokenIt);
 
+        if (tokenIt == std::sregex_iterator())
+            throw MalformedExpression("Unexpected end of expression.");
+
         auto operator_ = tokenIt++->str();
 
         auto rightOpValue = evalInfixExpr<T>(tokenIt);
 
         /// Consume and discard the closing parenthesis.
-        ++tokenIt;
+
+        if (tokenIt == std::sregex_iterator())
+            throw MalformedExpression("Unexpected end of expression.");
+
+        nextToken = tokenIt++->str();
+
+        if (nextToken != ")")
+            throw MalformedExpression("Closing paranthesis expected.");
 
         switch (operator_[0])
         {
@@ -186,11 +227,14 @@ T evalInfixExpr(std::sregex_iterator& tokenIt)
         }
     }
 
-    /// According to the specification of the exercise, numbers in input
-    /// can be assumed to be positive integers. Hence, no exception handling.
-    T value = std::stoi(nextToken);
-
-    return value;
+    try
+    {
+        return std::stoi(nextToken);
+    }
+    catch (const std::invalid_argument&)
+    {
+        throw MalformedExpression("Number expected.");
+    }
 }
 
 }
