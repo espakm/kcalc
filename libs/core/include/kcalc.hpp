@@ -44,64 +44,57 @@ void repl(ExpressionFormat expressionFormat = ExpressionFormat::INFIX,
 
 
 /// Evaluates an expression in a given syntax format to a real number.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned as a float number. (Any sub-expressions
-/// are float.) The reading stops after the first complete expression has been
-/// read in. Any superfluous content is ignored.
+/// Operands are assumed to be positive integer numbers. Result is returned as a
+/// float number. (Any sub-expressions are also float.)
 /// @param expression the expression in prefix format
 /// @return the value of the expression
+/// @throw MalformedExpression if there is a syntax error in the expression
 float evalExpr(ExpressionFormat expressionFormat,
                const std::string& expression);
 
 
 /// Evaluates an expression given in prefix format.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned in the desired type, by default as
-/// float. The reading stops after the first complete expression has been read
-/// in. Any superfluous content is ignored.
+/// Operands are assumed to be positive integer numbers. Result is returned of
+/// the desired type, by default as float.
 /// @param T the type of the result of the expression
 /// @param expression the expression in prefix format
 /// @return the value of the expression
+/// @throw MalformedExpression if there is a syntax error in the expression
 template<class T = float>
 T evalPrefixExpr(const std::string& expression);
 
 
 /// Evaluates an expression given in infix format.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned in the desired type, by default as
-/// float. The reading stops after the first complete expression has been read
-/// in. Any superfluous content is ignored.
+/// Operands are assumed to be positive integer numbers. Result is returned of
+/// the desired type, by default as float.
 /// @param T the type of the result of the expression
 /// @param expression the expression in infix format
 /// @return the value of the expression
+/// @throw MalformedExpression if there is a syntax error in the expression
 template<class T = float>
 T evalInfixExpr(const std::string& expression);
 
 
 /// Evaluates an expression in prefix format.
 /// The tokens of the expression are provided by the iterator argument.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned in the desired type, by default as
-/// float. The reading stops after the first complete expression has been read
-/// in. Further tokens are not processed, even if the iterator is not at the
-/// end.
+/// Operands are assumed to be positive integer numbers. Result is returned of
+/// the desired type, by default as float.
 /// @param T the type of the result of the expression
 /// @param tokenIt the iterator that delivers the tokens of the expression
 /// @return the value of the expression
+/// @throw MalformedExpression if there is a syntax error in the expression
 template<class T = float>
 T evalPrefixExpr(std::sregex_iterator& tokenIt);
 
 
 /// Evaluates an expression in infix format.
 /// The tokens of the expression are provided by the iterator argument.
-/// The expression is assumed to be valid. Operands are assumed to be positive
-/// integer numbers. Result is returned in the desired type, by default as
-/// float. The reading stops after the first complete expression has been read
-/// in. Further tokens are not processed, even if the iterator is not at the
-/// end.
+/// Operands are assumed to be positive integer numbers. Result is returned of
+/// the desired type, by default as float.
 /// @param T the type of the result of the expression
 /// @param tokenIt the iterator that delivers the tokens of the expression
 /// @return the value of the expression
+/// @throw MalformedExpression if there is a syntax error in the expression
 template <class T>
 T evalInfixExpr(std::sregex_iterator& tokenIt);
 
