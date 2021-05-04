@@ -199,7 +199,15 @@ T evalInfixExpr(std::sregex_iterator& tokenIt)
         if (tokenIt == std::sregex_iterator())
             throw MalformedExpression("Unexpected end of expression.");
 
-        auto operator_ = tokenIt++->str();
+        nextToken = tokenIt++->str();
+        if (nextToken != "+"
+            && nextToken != "-"
+            && nextToken != "*"
+            && nextToken != "/")
+        {
+            throw MalformedExpression("Arithmetic operator expected.");
+        }
+        auto operator_ = nextToken;
 
         auto rightOpValue = evalInfixExpr<T>(tokenIt);
 
