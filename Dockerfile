@@ -1,10 +1,8 @@
-FROM ubuntu:20.04 AS build
+FROM alpine:3.13 AS build
 
-ARG DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update \
- && apt-get install -y \
+RUN apk --no-cache add \
         cmake \
+        make \
         g++
 
 COPY . /src
@@ -16,7 +14,9 @@ RUN cmake /src \
  && strip /usr/bin/kcalc
 
 
-FROM ubuntu:20.04
+FROM alpine:3.13
+
+RUN apk --no-cache add libstdc++
 
 COPY --from=build /usr/bin/kcalc /usr/bin/
 
