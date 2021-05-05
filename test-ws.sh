@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Runs unit and system tests for the KCalc web service.
+# Runs unit tests for the KCalc web service.
 #
 # Make sure that the right Python environment is selected, e.g.:
 #
