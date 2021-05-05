@@ -9,5 +9,7 @@
 
 set -e
 
+export KCALC_COMMAND_DIR="${PWD}/build/apps"
+
 cd kcalc-server
 python -m unittest discover

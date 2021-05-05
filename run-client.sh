@@ -9,7 +9,7 @@
 #   - install Miniconda or Anaconda
 #   - run the following commands:
 #
-#      $ conda create --name kcalc python=3
+#      $ conda create --name kcalc python=3.8
 #      $ conda activate kcalc
 #      $ pip install requests
 #
