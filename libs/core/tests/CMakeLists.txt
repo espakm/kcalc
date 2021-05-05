@@ -1,3 +1,5 @@
+# Unit tests
+
 add_executable(test-kcalc-core test-kcalc-core.cpp)
 target_link_libraries(test-kcalc-core
   kcalc-core
