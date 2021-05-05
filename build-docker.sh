@@ -1,12 +1,11 @@
 #!/bin/sh
 
-# Builds Docker images for the KCalc command line application, the web service
-# and the web client.
+# Builds Docker images for KCalc, KCalc Server and KCalc Client
 
 set -e
 
 docker build -t kcalc .
 
-docker build -t kcalc-ws web-service
+docker build -t kcalc-server kcalc-server
 
-docker build -t kcalc-client web-client
+docker build -t kcalc-client kcalc-client

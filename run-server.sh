@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Runs the KCalc web service.
+# Runs KCalc Server.
 #
 # It assumes that falcon and gunicorn are installed on the system.
 #
@@ -20,10 +20,9 @@
 
 export KCALC_COMMAND_DIR="${PWD}/build/apps"
 
-cd web-service
+cd kcalc-server
 
-# For debugging:
-# gunicorn -b 127.0.0.1:5000 kcalc.app --reload
+KCALC_SERVER_HOST=127.0.0.1
+KCALC_SERVER_PORT=8000
 
-# By default the web service is bound to 0.0.0.0:8000
-gunicorn kcalc.app
+gunicorn -b ${KCALC_SERVER_HOST}:${KCALC_SERVER_PORT} kcalc.app

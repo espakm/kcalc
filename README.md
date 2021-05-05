@@ -18,20 +18,20 @@
 The original description of the exercise can be found in the `docs` directory.
 
 For brevity, the instructions below are only for Linux and Mac. (Windows would
-not be much different.)
+not be much different, though.)
 
 
-### Command line application
+### KCalc
 
-#### Requirements
+This is a simple interactive command line application.
+
+Requirements:
 
  - C++17 compatible compiler
  - CMake 3.13 or later
  - Bash
 
-#### Build and test
-
-The following scripts can be used to build and test the application:
+Build and testing:
 
 ```
 ./build.sh
@@ -40,9 +40,9 @@ The following scripts can be used to build and test the application:
 
 (The test script also builds.)
 
-#### Run
+Running:
 
-The application takes its input from stdin and writes the result to stdout.
+The program takes its input from stdin and writes the result to stdout.
 The syntax format (prefix or infix) can be specified as an argument. Default is
 infix.
 
@@ -50,29 +50,34 @@ infix.
 ./run.sh [--prefix|--infix]
 ```
 
-### Web service application
+### KCalc Server
 
-#### Requirements
+This is a lightweight web service wrapper around KCalc.
 
- - Python 3
+Requirements:
+
+ - Python 3.8
  - Falcon
  - Gunicorn
 
-#### Test
-
-The following script can be used to test the web service application:
+Testing:
 
 ```
-./test-ws.sh
+./test-server.sh
 ```
 
-#### Run
-
-The application can be run by the following command. It uses port 8000.
+Running:
 
 ```
-./run-ws.sh
+./run-server.sh
 ```
+
+The default end point of the service is:
+
+  - http://127.0.0.1:8000/calculator
+
+It can be modified by editing the launch script.
+
 
 #### REST API
 
@@ -92,24 +97,53 @@ The POST command accepts a JSON document with an "expr" and  "format" fields.
 The semantics is the same as for the GET. The response is also the same.
 
 
+### KCalc Client
+
+It is a simple interactive command line application that evaluates arithmetic
+expressions using KCalc Server.
+
+Requirements:
+
+ - Python 3.8
+ - requests (Python library)
+
+Running:
+
+```
+./run-client.sh
+```
+
+The URI endpoint of the KCalc server and the syntax format (prefix or infix) can
+be specified via environment variables in the script. Defaults are:
+
+ - http://127.0.0.1:8000/calculator
+ - infix
+
+
 ### Build and run using Docker
 
-Building Docker images for both applications:
+Building Docker images for all the three applications:
 
 ```
 ./build-docker.sh
 ```
 
-Running the command line application using Docker:
+Running KCalc using Docker:
 
 ```
 ./run-docker.sh [--prefix|--infix]
 ```
 
-Running the web service application using Docker:
+Running KCalc Server using Docker:
 
 ```
-./run-docker-ws.sh
+./run-server-docker.sh
 ```
 
 Modify the script if you want to use a different port. (Default is 8000.)
+
+Running KCalc Client using Docker:
+
+```
+./run-client-docker.sh
+```

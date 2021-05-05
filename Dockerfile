@@ -6,7 +6,12 @@ RUN apk --no-cache add \
         g++ \
         bash
 
-COPY . /src
+COPY 3rd_party /src/3rd_party
+COPY apps /src/apps
+COPY libs /src/libs
+COPY tests /src/tests
+COPY CMakeLists.txt /src/
+
 WORKDIR /src/build
 
 RUN cmake .. \

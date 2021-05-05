@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Runs the a command line client against the KCalc web service.
+# Runs KCalc Client against a KCalc Server.
 #
 # It assumes that the 'requests' library is installed on the system.
 #
@@ -21,6 +21,6 @@
 export KCALC_SERVER_URI="http://127.0.0.1:8000/calculator"
 export KCALC_SYNTAX_FORMAT="infix"
 
-cd web-client
+cd kcalc-client
 
 ./kcalc_client.py

@@ -46,6 +46,8 @@ def repl():
             process(line)
     except EOFError:
         return
+    except KeyboardInterrupt:
+        return
 
 
 if __name__ == '__main__':
