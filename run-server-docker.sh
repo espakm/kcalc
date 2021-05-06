@@ -2,7 +2,10 @@
 
 # Runs KCalc Server from a Docker container.
 
-HOST_IP=127.0.0.1
-HOST_PORT=8000
+docker container stop kcalc-server
+docker container rm kcalc-server
 
-docker run -it -p ${HOST_IP}:${HOST_PORT}:8000 kcalc-server
+docker network rm kcalc-net
+docker network create kcalc-net
+
+docker run -it --name kcalc-server --network kcalc-net kcalc-server

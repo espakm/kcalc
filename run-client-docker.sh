@@ -2,7 +2,10 @@
 
 # Runs KCalc Client from a Docker container.
 
-export KCALC_SERVER_URI="http://127.0.0.1:8000/calculator"
+export KCALC_SERVER_URI="http://kcalc-server/calculator"
 export KCALC_SYNTAX_FORMAT="infix"
 
-docker run -it --net=host kcalc-client
+docker run -it --network kcalc-net \
+    --env KCALC_SERVER_URI \
+    --env KCALC_SERVER_SYNTAX \
+    kcalc-client

@@ -16,6 +16,6 @@ WORKDIR /kcalc-server
 
 RUN pwd && python3 -m unittest discover
 
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "kcalc.app"]
+CMD ["gunicorn", "-b", "0.0.0.0:80", "kcalc.app"]
 
-EXPOSE 8000
+EXPOSE 80

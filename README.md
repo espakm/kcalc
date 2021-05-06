@@ -15,10 +15,19 @@
     | |___|___|___| |___| |
     |_____________________|
 
-The original description of the exercise can be found in the `docs` directory.
 
-For brevity, the instructions below are only for Linux and Mac. (Windows would
-not be much different, though.)
+### TLDR;
+
+```
+./build-docker.sh
+./run-server-docker.sh
+./run-client-docker.sh   # in another console window
+```
+
+This will start the client in infix mode. For prefix mode, change env var in
+launch script.
+
+For local installation, read further.
 
 
 ### KCalc
@@ -50,6 +59,7 @@ infix.
 ./run.sh [--prefix|--infix]
 ```
 
+
 ### KCalc Server
 
 This is a lightweight web service wrapper around KCalc.
@@ -72,11 +82,7 @@ Running:
 ./run-server.sh
 ```
 
-The default end point of the service is:
-
-  - http://127.0.0.1:8000/calculator
-
-It can be modified by editing the launch script.
+The default end point of the service can be modified by editing the launch script.
 
 
 #### REST API
@@ -114,10 +120,7 @@ Running:
 ```
 
 The URI endpoint of the KCalc server and the syntax format (prefix or infix) can
-be specified via environment variables in the script. Defaults are:
-
- - http://127.0.0.1:8000/calculator
- - infix
+be specified via environment variables in the script. Defaults format is infix.
 
 
 ### Build and run using Docker
@@ -128,23 +131,23 @@ Building Docker images for all the three applications:
 ./build-docker.sh
 ```
 
-Running KCalc using Docker:
+Running KCalc:
 
 ```
 ./run-docker.sh [--prefix|--infix]
 ```
 
-Running KCalc Server using Docker:
+Running KCalc Server:
 
 ```
 ./run-server-docker.sh
 ```
 
-Running KCalc Client using Docker:
+Running KCalc Client:
 
 ```
 ./run-client-docker.sh
 ```
 
-For both the server and client, the default IP addreess and port can be modified
-via environment variables in the launch scripts.
+Default settings can be modified via environment variables in the launch scripts.
+Default expression syntax format is infix.
