@@ -8,9 +8,12 @@ RUN apk --no-cache add \
         py3-pip \
  && pip install falcon gunicorn
 
-COPY . /web-service/
+COPY kcalc /kcalc-server/kcalc
 
 COPY --from=kcalc /usr/bin/kcalc /usr/bin/
 
-WORKDIR /web-service
+WORKDIR /kcalc-server
+
+RUN pwd && python3 -m unittest discover
+
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "kcalc.app"]

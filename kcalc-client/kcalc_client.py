@@ -15,7 +15,7 @@ syntax_format = environ.get('KCALC_SYNTAX_FORMAT', 'infix')
 
 def process(line: str):
     query_args = {'expr': line, 'format': syntax_format}
- 
+
     try:
         response = requests.get(server_uri, params=query_args)
     except ConnectionError:
@@ -35,7 +35,7 @@ def process(line: str):
     if data['success'] != True:
         print("Error occurred at evaluating the expression.")
         return
-        
+
     for r in data['result']:
         print(r)
 
