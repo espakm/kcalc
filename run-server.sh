@@ -9,7 +9,7 @@
 #   - install Miniconda or Anaconda
 #   - run the following commands:
 #
-#      $ conda create --name kcalc python=3.8
+#      $ conda create -y --name kcalc python=3.7
 #      $ conda activate kcalc
 #      $ pip install falcon gunicorn
 #

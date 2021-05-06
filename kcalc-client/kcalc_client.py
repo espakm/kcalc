@@ -42,8 +42,10 @@ def process(line: str):
 
 def repl():
     try:
-        while line := input('> '):
+        line = input('> ')
+        while line:
             process(line)
+            line = input('> ')
     except EOFError:
         return
     except KeyboardInterrupt:

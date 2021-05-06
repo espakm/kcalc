@@ -66,7 +66,7 @@ This is a lightweight web service wrapper around KCalc.
 
 Requirements:
 
- - Python 3.8
+ - Python 3.7+
  - Falcon
  - Gunicorn
 
@@ -110,7 +110,7 @@ expressions using KCalc Server.
 
 Requirements:
 
- - Python 3.8
+ - Python 3.7+
  - requests (Python library)
 
 Running:
