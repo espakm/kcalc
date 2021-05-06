@@ -93,7 +93,7 @@ field is a list of strings. It holds the results of the evaluated expressions or
 an error message for malformed expressions. The "ok" field is True if the
 processing was successful, otherwise False.
 
-The POST command accepts a JSON document with an "expr" and  "format" fields.
+The POST command accepts a JSON document with an "expr" and "format" fields.
 The semantics is the same as for the GET. The response is also the same.
 
 
@@ -140,10 +140,11 @@ Running KCalc Server using Docker:
 ./run-server-docker.sh
 ```
 
-Modify the script if you want to use a different port. (Default is 8000.)
-
 Running KCalc Client using Docker:
 
 ```
 ./run-client-docker.sh
 ```
+
+For both the server and client, the default IP addreess and port can be modified
+via environment variables in the launch scripts.
